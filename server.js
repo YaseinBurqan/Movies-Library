@@ -7,7 +7,7 @@ const bodyParser = require("body-parser");
 const axios = require("axios");
 const apiKey = "218da8bf22c684d6bae14c5df2c30224";
 
-const databaseUrl = `postgres://sohaib:0000@localhost:5432/sohaib`;
+const databaseUrl = `postgres://yaseinburqan:6437@localhost:5432/moviedatabase`;
 const { Client } = require("pg");
 const client = new Client(databaseUrl);
 const moviesData = require("./movie_data/data.json");
