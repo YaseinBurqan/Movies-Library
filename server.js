@@ -27,6 +27,7 @@ app.get("/favorite", favoriteHandler);
 app.get("/trending", trendingPageHandler);
 app.post("/addMovie", addMovieHandler);
 app.get("/getMovie/:id", getMovieByIdHandler);
+app.get("/getMovie", getHandler);
 app.get("*", errorHandler);
 
 // Constructor
@@ -97,6 +98,16 @@ function getMovieByIdHandler(req, res) {
     .query(sql)
     .then((result) => {
       res.status(200).json(result.rows);
+    })
+    .catch();
+}
+
+function getHandler(req, res) {
+  let sql = "SELECT * from movie;";
+  client
+    .query(sql)
+    .then((result) => {
+      res.json(result.rows);
     })
     .catch();
 }
