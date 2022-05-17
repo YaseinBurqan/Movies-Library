@@ -7,7 +7,7 @@ const bodyParser = require("body-parser");
 const axios = require("axios");
 const apiKey = "218da8bf22c684d6bae14c5df2c30224";
 
-const databaseUrl = `postgres://sohaib:0000@localhost:5432/sohaib`;
+const databaseUrl = `postgres://yaseinburqan:6437@localhost:5432/moviedatabase`;
 const { Client } = require("pg");
 const client = new Client(databaseUrl);
 const moviesData = require("./movie_data/data.json");
@@ -28,6 +28,8 @@ app.get("/trending", trendingPageHandler);
 app.post("/addMovie", addMovieHandler);
 app.get("/getMovie/:id", getMovieByIdHandler);
 app.get("/getMovie", getHandler);
+app.put("/updateMovie/:id", updateMovieHandler);
+app.delete("/delete/:id", deleteMovieHandler);
 app.get("*", errorHandler);
 
 // Constructor
@@ -112,6 +114,32 @@ function getHandler(req, res) {
     .catch();
 }
 
+function updateMovieHandler(req, res) {
+  //const { updateName } = req.params;
+  const { name, time, summary, image } = req.body;
+  const { id } = req.params;
+  let sql = `UPDATE movie SET name=$1, time=$2, summary=$3, image=$4 WHERE id = $5 RETURNING *;`; // sql query
+  let values = [name, time, summary, image, id];
+  client
+    .query(sql, values)
+    .then((result) => {
+      return res.status(200).json(result.rows);
+    })
+    .catch();
+}
+
+function deleteMovieHandler(req, res) {
+  const id = req.query.id;
+  let sql = "DELETE FROM movie WHERE id=$1;";
+  let value = [id];
+  client
+    .query(sql, value)
+    .then((result) => {
+      console.log(result);
+      res.send("deleted");
+    })
+    .catch();
+}
 // after connection to db, start the server
 client.connect().then(() => {
   app.listen(port, () => {
